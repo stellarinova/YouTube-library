@@ -12,6 +12,41 @@ import os
 SEARCH_INDEX_FILE = "search_index.json"
 
 
+import json
+import re
+
+def safe_json_parse(text):
+
+    # Extract JSON block
+    match = re.search(r'\{.*\}', text, re.DOTALL)
+
+    if not match:
+        raise ValueError("No JSON found in AI response")
+
+    json_text = match.group(0)
+
+    # Try normal parse first
+    try:
+        return json.loads(json_text)
+    except json.JSONDecodeError:
+        pass
+
+    # 🔥 Attempt auto-fix (very important)
+    json_text = json_text.strip()
+
+    # Fix common truncation issues
+    json_text = re.sub(r',\s*}', '}', json_text)
+    json_text = re.sub(r',\s*]', ']', json_text)
+
+    # Try again
+    try:
+        return json.loads(json_text)
+    except json.JSONDecodeError as e:
+        print("\n--- RAW AI RESPONSE (truncated) ---\n")
+        print(text[:2000])
+        print("\n----------------------------------\n")
+        raise e
+
 def load_search_index():
     if os.path.exists(SEARCH_INDEX_FILE):
         with open(SEARCH_INDEX_FILE, "r") as f:
@@ -276,6 +311,8 @@ STRICT RULES:
 - Do NOT include markdown or explanations
 - Keep content concise and readable and engaging
 - Limit each section to 1–2 short paragraphs
+- Do NOT include any explanation or text before or after JSON
+- Ensure JSON is complete and properly closed
 
 STYLE:
 - Engaging like The Atlantic
@@ -324,13 +361,15 @@ Transcript summary:
 
     response = client.responses.create(
         model="gpt-5",
-        input=prompt
+        input=prompt,
+        max_output_tokens=3000
     )
 
     text = response.output_text
 
     try:
-        data = json.loads(text)
+#        data = json.loads(text)
+        data = safe_json_parse(text)
     except:
         print("AI output was not valid JSON. Printing raw response.")
         print(text)
