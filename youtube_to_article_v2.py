@@ -431,6 +431,8 @@ def generate_html_b2(meta, article_data):
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>{meta['title']}</title>
 
 <style>
@@ -578,6 +580,78 @@ body {{
     color:#a0aec0;
     margin-top:60px;
 }}
+
+@media screen and (max-width: 600px) {
+
+  body {
+    font-size: 18px;   /* base font bigger */
+  }
+
+  .container {
+    padding: 20px 15px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .intro {
+    font-size: 19px;
+    line-height: 1.8;
+  }
+
+  .section-card p {
+    font-size: 18px;
+    line-height: 1.9;
+  }
+
+  .quote {
+    font-size: 18px;
+    line-height: 1.9;
+    padding: 20px;
+  }
+
+  .takeaways li {
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .meta {
+    font-size: 14px;
+  }
+
+  .search {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  /* NAV menu spacing */
+  .menu {
+    gap: 12px;
+  }
+
+  .menu-item {
+    font-size: 16px;
+  }
+
+}
+
+p {
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+body {
+  font-size: clamp(16px, 1.2vw, 18px);
+}
 
 </style>
 
