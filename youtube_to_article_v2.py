@@ -81,6 +81,11 @@ def generate_channel_index(channel):
     index = load_search_index()
 
     articles = [a for a in index if a["channel"] == channel]
+    nav_html = """
+<div class="nav-top">
+  <a href="../index.html" class="back-home">🏠 Back to Home</a>
+</div>
+"""
 
     articles_html = ""
 
@@ -116,6 +121,7 @@ body {{ font-family: Inter, sans-serif; background:#f7f9fc; }}
 <body>
 
 <div class="container">
+{nav_html}
 <h1>{channel}</h1>
 {articles_html}
 </div>
@@ -135,6 +141,11 @@ def generate_tag_pages():
 
     index = load_search_index()
     tag_map = {}
+    nav_html = """
+<div class="nav-top">
+  <a href="../index.html" class="back-home">🏠 Back to Home</a>
+</div>
+"""
 
     # Group by tag
     for article in index:
@@ -177,6 +188,7 @@ body {{ font-family: Inter, sans-serif; background:#f7f9fc; }}
 <body>
 
 <div class="container">
+{nav_html}
 <h1>Tag: {tag}</h1>
 {items}
 </div>
@@ -382,7 +394,15 @@ Transcript summary:
 # Generate Professional HTML
 # -----------------------------
 def generate_html(meta, article):
-
+    channel_slug = meta["channel"].replace(" ", "_")
+    
+    nav_html = f"""
+<div class="nav-top">
+<a href="../index.html" class="back-home">🏠 Home</a>
+<a href="../{channel_slug}/index.html" class="back-home">← Back to Channel</a>
+</div>
+"""
+    
     return f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -399,10 +419,9 @@ def generate_html(meta, article):
 
 <body>
 
-<div class="container">
 
-<div class="nav-top">
-<a href="../index.html" class="back-home">Back to Home</a>
+<div class="container">
+{nav_html}
 </div>
 
 <div class="hero">
