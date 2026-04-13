@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Youtube </title> Library</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+  font-family: Inter, sans-serif;
+  background:#f7f9fc;
+  margin:0;
+}
+
+.container {
+  max-width:800px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+/* -------- NAV BAR -------- */
+
+.navbar {
+  background:white;
+  padding:15px 20px;
+  border-bottom:1px solid #e2e8f0;
+}
+
+.nav-inner {
+  max-width:800px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.menu {
+  display:flex;
+  gap:20px;
+}
+
+.menu-item {
+  cursor:pointer;
+  color:#2b6cb0;
+  font-weight:600;
+}
+
+/* dropdown */
+
+.dropdown {
+  position:relative;
+}
+
+.dropdown-content {
+  display:none;
+  position:absolute;
+  top:100%;
+  left:0;
+
+  background:white;
+  padding:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  border-radius:10px;
+
+  max-height:320px;
+  overflow-y:auto;
+
+  min-width:260px;
+  max-width:420px;
+
+  white-space:nowrap;
+
+  z-index:9999;   /* 🔥 VERY IMPORTANT */
+}
+
+.dropdown-content a {
+  display:block;
+  text-decoration:none;
+  color:#2d3748;
+  margin-bottom:8px;
+
+  /* 🔥 NEW */
+  overflow:hidden;
+  text-overflow:ellipsis;
+  padding:6px 8px;
+  border-radius:6px;
+}
+
+.dropdown-content a:hover {
+  background:#f1f5f9;
+}
+
+.dropdown:hover .dropdown-content {
+  display:block;
+}
+
+
+/* -------- CONTENT -------- */
+
+h1 {
+  text-align:center;
+}
+
+.search {
+  width:100%;
+  padding:12px;
+  margin-bottom:30px;
+  font-size:16px;
+}
+
+.article {
+  margin-bottom:25px;
+}
+
+.article a {
+  text-decoration:none;
+  color:#2b6cb0;
+}
+
+.meta {
+  font-size:13px;
+  color:#777;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<div class="navbar">
+  <div class="nav-inner">
+
+    <div class="menu">
+
+      <div class="dropdown">
+        <div class="menu-item">Tags ▾</div>
+        <div class="dropdown-content" id="tagMenu"></div>
+      </div>
+
+      <div class="dropdown">
+        <div class="menu-item">Channels ▾</div>
+        <div class="dropdown-content" id="channelMenu"></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="container">
+
+<h1>Youtube Library</h1>
+
+<input class="search" placeholder="Search videos..." onkeyup="search(this.value)">
+
+<div id="results"></div>
+
+</div>
+
+<script>
+
+let data = []
+
+fetch('search_index.json')
+.then(res => res.json())
+.then(json => {
+  data = json
+  render(data)
+  buildMenus()
+})
+
+function render(items){
+  let html = ""
+
+  items.forEach(a => {
+    html += `
+      <div class="article">
+        <a href="${a.url}">
+          <h3>${a.title}</h3>
+        </a>
+        <div class="meta">${a.channel} &bull; ${a.date}</div>
+        <p>${a.summary}</p>
+      </div>
+    `
+  })
+
+  document.getElementById("results").innerHTML = html
+}
+
+function search(q){
+  q = q.toLowerCase()
+
+  const filtered = data.filter(a =>
+    a.title.toLowerCase().includes(q) ||
+    a.keywords.join(" ").toLowerCase().includes(q)
+  )
+
+  render(filtered)
+}
+
+/* -------- BUILD MENUS -------- */
+
+
+function buildMenus(){
+
+  const tagCounts = {}
+  const channelCounts = {}
+
+  data.forEach(a => {
+
+    // ---- TAGS ----
+    if (a.keywords && Array.isArray(a.keywords)) {
+      a.keywords.forEach(k => {
+        const key = k.trim()
+        if (!key) return
+        tagCounts[key] = (tagCounts[key] || 0) + 1
+      })
+    }
+
+    // ---- CHANNELS ----
+    if (a.channel) {
+      const c = a.channel.trim()
+      channelCounts[c] = (channelCounts[c] || 0) + 1
+    }
+
+  })
+
+  // ---- SORT ----
+  const sortedTags = Object.entries(tagCounts)
+    .sort((a,b) => b[1] - a[1])
+
+  const sortedChannels = Object.entries(channelCounts)
+    .sort((a,b) => b[1] - a[1])
+
+  // ---- BUILD TAG MENU ----
+  let tagHTML = ""
+
+  sortedTags.forEach(([tag, count]) => {
+    tagHTML += `
+      <a href="tags/${clean(tag)}.html">
+        ${tag} (${count})
+      </a>
+    `
+  })
+
+  document.getElementById("tagMenu").innerHTML = tagHTML || "<div>No tags yet</div>"
+
+  // ---- BUILD CHANNEL MENU ----
+  let channelHTML = ""
+
+  sortedChannels.forEach(([c, count]) => {
+    channelHTML += `
+      <a href="${clean(c)}/index.html">
+        ${c} (${count})
+      </a>
+    `
+  })
+
+  document.getElementById("channelMenu").innerHTML = channelHTML || "<div>No channels yet</div>"
+}
+
+function buildMenus_v1(){
+
+  let tags = new Set()
+  let channels = new Set()
+
+  data.forEach(a => {
+    a.keywords.forEach(k => tags.add(k))
+    channels.add(a.channel)
+  })
+
+  // TAG MENU
+  let tagHTML = ""
+  tags.forEach(tag => {
+    tagHTML += `<a href="tags/${clean(tag)}.html">${tag}</a>`
+  })
+  document.getElementById("tagMenu").innerHTML = tagHTML
+
+  // CHANNEL MENU
+  let channelHTML = ""
+  channels.forEach(c => {
+    channelHTML += `<a href="${clean(c)}/index.html">${c}</a>`
+  })
+  document.getElementById("channelMenu").innerHTML = channelHTML
+}
+
+/* -------- CLEAN FUNCTION -------- */
+function clean(text){
+  return text
+    .replace(/[\\/*?:"<>|]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/[^a-zA-Z0-9_]/g, "")
+}
+
+function clean_v1(text){
+  return text
+    .replace(/[\\/*?:"<>|]/g, "")
+    .replace(/\s+/g, "")
+}
+
+</script>
+
+</body>
+</html>
