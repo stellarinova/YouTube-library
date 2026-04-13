@@ -381,541 +381,6 @@ Transcript summary:
 # -----------------------------
 # Generate Professional HTML
 # -----------------------------
-def generate_html_b2(meta, article_data):
-
-    date = format_date(meta["date"])
-
-    keywords_html = "".join(
-        [f'<span class="tag">{k}</span>' for k in article_data["keywords"]]
-    )
-
-    sections_html = ""
-
-    for s in article_data["sections"]:
-        sections_html += f"""
-        <section class="section">
-            <h2>{s['heading']}</h2>
-            <p>{s['content'].replace("\\n","<br><br>")}</p>
-        </section>
-        """
-
-    quotes_html = ""
-
-    for q in article_data["quotes"]:
-        quotes_html += f"""
-        <blockquote class="quote">
-            {q}
-        </blockquote>
-        """
-
-    takeaways_html = ""
-
-    for t in article_data["takeaways"]:
-        takeaways_html += f"<li>{t}</li>"
-        
-    verse_html = ""
-
-    if "verses" in article_data:
-        for v in article_data["verses"]:
-            verse_html += f"""
-            <div class="scripture-card">
-                <div class="scripture-ref">{v['reference']}</div>
-                <div class="scripture-text">"{v['text']}"</div>
-            </div>
-            """
-
-    html = f"""
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>{meta['title']}</title>
-
-<style>
-
-/* -------- Base -------- */
-
-body {{
-    margin:0;
-    background:#f7f9fc;
-    font-family: Georgia, "Times New Roman", serif;
-    color:#2d3748;
-}}
-
-/* -------- Container -------- */
-
-.container {{
-    max-width:680px;
-    margin:60px auto;
-    padding:0 20px;
-}}
-
-/* -------- Header -------- */
-
-.header {{
-    text-align:center;
-    margin-bottom:50px;
-}}
-
-.header h1 {{
-    font-size:34px;
-    line-height:1.3;
-    margin-bottom:20px;
-}}
-
-.meta {{
-    font-size:14px;
-    color:#718096;
-    line-height:1.8;
-}}
-
-/* -------- Intro -------- */
-
-.intro {{
-    font-size:20px;
-    line-height:1.9;
-    margin-bottom:40px;
-    color:#4a5568;
-}}
-
-
-/* -------- Divider -------- */
-
-.divider {{
-    height:1px;
-    background:#e2e8f0;
-    margin:50px 0;
-}}
-
-/* -------- Sections -------- */
-
-.section {{
-    margin-bottom:45px;
-}}
-
-.section h2 {{
-    font-size:22px;
-    margin-bottom:15px;
-    color:#2b6cb0;
-}}
-
-.section p {{
-    font-size:18px;
-    line-height:2;
-}}
-
-/* -------- Quotes -------- */
-
-.quote {{
-    border-left:4px solid #ed8936;
-    padding-left:20px;
-    margin:40px 0;
-    font-style:italic;
-    color:#4a5568;
-    font-size:18px;
-    line-height:2;
-}}
-
-/* -------- Takeaways -------- */
-
-.takeaways {{
-    margin-top:50px;
-}}
-
-.takeaways h3 {{
-    font-size:20px;
-    margin-bottom:20px;
-}}
-
-.takeaways ul {{
-    padding-left:20px;
-}}
-
-.takeaways li {{
-    margin-bottom:14px;
-    line-height:1.8;
-    font-size:17px;
-}}
-
-/* -------- Tags -------- */
-
-.tags {{
-    margin-top:50px;
-}}
-
-.tag {{
-    display:inline-block;
-    background:#edf2f7;
-    padding:6px 12px;
-    margin:5px;
-    border-radius:16px;
-    font-size:13px;
-    color:#4a5568;
-}}
-
-/* -------- Button -------- */
-
-.button {{
-    display:block;
-    text-align:center;
-    margin:50px auto;
-    padding:14px 28px;
-    background:#ed8936;
-    color:white;
-    text-decoration:none;
-    border-radius:25px;
-    width:220px;
-    font-weight:600;
-}}
-
-/* -------- Footer -------- */
-
-.footer {{
-    text-align:center;
-    font-size:13px;
-    color:#a0aec0;
-    margin-top:60px;
-}}
-
-@media screen and (max-width: 600px) {
-
-  body {
-    font-size: 18px;   /* base font bigger */
-  }
-
-  .container {
-    padding: 20px 15px;
-  }
-
-  h1 {
-    font-size: 26px;
-  }
-
-  h2 {
-    font-size: 22px;
-  }
-
-  h3 {
-    font-size: 20px;
-  }
-
-  .intro {
-    font-size: 19px;
-    line-height: 1.8;
-  }
-
-  .section-card p {
-    font-size: 18px;
-    line-height: 1.9;
-  }
-
-  .quote {
-    font-size: 18px;
-    line-height: 1.9;
-    padding: 20px;
-  }
-
-  .takeaways li {
-    font-size: 18px;
-    line-height: 1.8;
-  }
-
-  .meta {
-    font-size: 14px;
-  }
-
-  .search {
-    font-size: 16px;
-    padding: 14px;
-  }
-
-  /* NAV menu spacing */
-  .menu {
-    gap: 12px;
-  }
-
-  .menu-item {
-    font-size: 16px;
-  }
-
-}
-
-p {
-  line-height: 1.8;
-  margin-bottom: 18px;
-}
-
-body {
-  font-size: clamp(16px, 1.2vw, 18px);
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="header">
-    <h1>{meta['title']}</h1>
-
-    <div class="meta">
-        {meta['channel']} &bull; {date}<br>
-    </div>
-</div>
-
-<div class="intro">
-{article_data["intro"]}
-</div>
-
-<div class="divider"></div>
-
-{sections_html}
-
-{quotes_html}
-
-<div class="divider"></div>
-
-<div class="takeaways">
-    <h3>Key Takeaways</h3>
-    <ul>
-        {takeaways_html}
-    </ul>
-</div>
-
-<div class="tags">
-    {keywords_html}
-</div>
-
-<a class="button" href="{meta['url']}">Watch Full Video</a>
-
-<div class="footer">
-    Generated from a YouTube talk • Designed as a calm reading experience
-</div>
-
-</div>
-
-</body>
-</html>
-"""
-
-    return html
-def generate_html_b1(meta, article_data):
-
-    date = format_date(meta["date"])
-
-    keywords_html = "".join(
-        [f'<span class="tag">{k}</span>' for k in article_data["keywords"]]
-    )
-
-    sections_html = ""
-
-    for s in article_data["sections"]:
-
-        sections_html += f"""
-        <div class="section-card">
-        <h2>{s['heading']}</h2>
-        <p>{s['content'].replace("\\n","<br><br>")}</p>
-        </div>
-        """
-
-    quotes_html = ""
-
-    for q in article_data["quotes"]:
-        quotes_html += f'<div class="quote">{q}</div>'
-
-    takeaways_html = ""
-
-    for t in article_data["takeaways"]:
-        takeaways_html += f"<li>{t}</li>"
-
-    html = f"""
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>{meta['title']}</title>
-
-<style>
-
-body {{
-font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:#f3f6fb;
-margin:0;
-padding:0;
-}}
-
-.container {{
-max-width:760px;
-margin:auto;
-padding:40px;
-}}
-
-.hero {{
-background:linear-gradient(135deg,#2b6cb0,#ed8936);
-color:white;
-padding:60px 40px;
-border-radius:12px;
-margin-bottom:40px;
-}}
-
-.hero h1 {{
-margin:0;
-font-size:34px;
-}}
-
-.meta {{
-margin-top:15px;
-opacity:.9;
-line-height:1.8;
-}}
-
-.intro {{
-font-size:20px;
-line-height:2.2;
-margin-bottom:40px;
-}}
-
-.section-card {{
-background:white;
-padding:35px;
-margin-bottom:35px;
-border-radius:10px;
-box-shadow:0 6px 18px rgba(0,0,0,0.05);
-}}
-
-.section-card h2 {{
-margin-top:0;
-color:#2b6cb0;
-}}
-
-.section-card p {{
-line-height:2.2;
-font-size:18px;
-}}
-
-.quote {{
-background:#fffaf0;
-border-left:6px solid #ed8936;
-padding:26px;
-margin:35px 0;
-font-size:18px;
-font-style:italic;
-border-radius:8px;
-line-height:2;
-}}
-
-.takeaways {{
-background:#edf2f7;
-padding:30px;
-border-radius:10px;
-margin-top:40px;
-}}
-
-.takeaways li {{
-margin-bottom:12px;
-font-size:18px;
-line-height:2;
-}}
-
-.tags {{
-margin-top:40px;
-}}
-
-.tag {{
-display:inline-block;
-background:#e2e8f0;
-padding:8px 14px;
-margin:6px;
-border-radius:20px;
-font-size:14px;
-}}
-
-.button {{
-display:inline-block;
-margin-top:40px;
-padding:16px 32px;
-background:#ed8936;
-color:white;
-text-decoration:none;
-border-radius:30px;
-font-weight:600;
-}}
-
-.footer {{
-text-align:center;
-margin-top:50px;
-color:#777;
-}}
-
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="hero">
-
-<h1>{meta['title']}</h1>
-
-<div class="meta">
-Channel: {meta['channel']}<br>
-Published: {date}
-</div>
-
-</div>
-
-<div class="intro">
-{article_data["intro"]}
-</div>
-
-{sections_html}
-
-{quotes_html}
-
-<div class="takeaways">
-
-<h2>Key Takeaways</h2>
-
-<ul>
-{takeaways_html}
-</ul>
-
-</div>
-
-<div class="tags">
-
-<h3>Topics</h3>
-
-{keywords_html}
-
-</div>
-
-<a class="button" href="{meta['url']}">Watch Full Video</a>
-
-<div class="footer">
-
-Article generated from the original YouTube talk.
-
-</div>
-
-</div>
-
-</body>
-</html>
-"""
-
-    return html
 
 def generate_html(meta, article_data):
 
@@ -999,6 +464,7 @@ def generate_html(meta, article_data):
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{meta['title']}</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -1178,13 +644,110 @@ body {{
     margin-top:60px;
 }}
 
+@media screen and (max-width: 600px) {
+
+  body {
+    font-size: 18px;   /* base font bigger */
+  }
+
+  .container {
+    padding: 20px 15px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .intro {
+    font-size: 19px;
+    line-height: 1.8;
+  }
+
+  .section-card p {
+    font-size: 18px;
+    line-height: 1.9;
+  }
+
+  .quote {
+    font-size: 18px;
+    line-height: 1.9;
+    padding: 20px;
+  }
+
+  .takeaways li {
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  .meta {
+    font-size: 14px;
+  }
+
+  .search {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  /* NAV menu spacing */
+  .menu {
+    gap: 12px;
+  }
+
+  .menu-item {
+    font-size: 16px;
+  }
+
+}
+
+p {
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+body {
+  font-size: clamp(16px, 1.2vw, 18px);
+}
+
+.nav-top {
+  margin-bottom: 20px;
+}
+
+.back-home {
+  display:inline-block;
+  text-decoration:none;
+  font-size:14px;
+  color:#2b6cb0;
+  background:#edf2f7;
+  padding:8px 14px;
+  border-radius:20px;
+  transition:all 0.2s ease;
+}
+
+.back-home:hover {
+  background:#e2e8f0;
+}
+
 </style>
 
 </head>
 
 <body>
+back_button = """
+<div class="nav-top">
+  <a href="/" class="back-home">← Back to Home</a>
+</div>
+"""
 
 <div class="container">
+{back_button}
 
 <div class="header">
     <h1>{meta['title']}</h1>
@@ -1220,6 +783,12 @@ body {{
 </div>
 
 <a class="button" href="{meta['url']}">Watch Full Video</a>
+
+bottom_nav = """
+<div style="text-align:center; margin-top:50px;">
+  <a href="/" class="back-home">← Back to Home</a>
+</div>
+"""
 
 <div class="footer">
     Generated from a YouTube talk • Designed for calm reading
