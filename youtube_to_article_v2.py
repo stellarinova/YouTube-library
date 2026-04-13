@@ -393,7 +393,7 @@ def generate_html(meta, article):
 
 <title>{meta['title']}</title>
 
-<link rel="stylesheet" href="../assets/styles.css">
+<link rel="stylesheet" href="assets/styles.css">
 
 </head>
 
