@@ -393,7 +393,7 @@ def generate_html(meta, article):
 
 <title>{meta['title']}</title>
 
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="../assets/styles.css">
 
 </head>
 
@@ -402,7 +402,7 @@ def generate_html(meta, article):
 <div class="container">
 
 <div class="nav-top">
-<a href="/" class="back-home">Back to Home</a>
+<a href="../index.html" class="back-home">Back to Home</a>
 </div>
 
 <div class="hero">
