@@ -1,0 +1,180 @@
+:root {
+  --primary:#1a365d;
+  --accent:#c05621;
+  --bg:#f7fafc;
+  --text:#2d3748;
+  --card:#ffffff;
+  --border:#e2e8f0;
+}
+
+body {
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter;
+  background:#edf2f7;
+  margin:0;
+  padding:0;
+  color:var(--text);
+  line-height:1.8;
+  font-size:16px;
+}
+
+.container {
+  max-width:760px;
+  margin:auto;
+  padding:40px 25px;
+}
+
+h1,h2,h3 {
+  line-height:1.3;
+}
+
+p {
+  margin-bottom:18px;
+}
+
+/* NAV */
+.nav-top {
+  margin-bottom:20px;
+}
+
+.back-home {
+  display:inline-block;
+  text-decoration:none;
+  font-size:14px;
+  color:#2b6cb0;
+  background:#edf2f7;
+  padding:8px 14px;
+  border-radius:20px;
+}
+
+/* HERO */
+.hero {
+  background:linear-gradient(135deg,#2b6cb0,#ed8936);
+  color:white;
+  padding:50px 30px;
+  border-radius:12px;
+  margin-bottom:35px;
+}
+
+.hero h1 {
+  margin:0;
+  font-size:32px;
+}
+
+.meta {
+  margin-top:15px;
+  font-size:15px;
+  opacity:0.9;
+}
+
+/* INTRO */
+.intro {
+  font-size:19px;
+  margin-bottom:30px;
+  border-left:4px solid var(--accent);
+  padding-left:18px;
+}
+
+/* SECTION */
+.section-card {
+  background:white;
+  padding:30px;
+  margin-bottom:30px;
+  border-radius:10px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.05);
+}
+
+.section-card h2 {
+  margin-top:0;
+  color:var(--primary);
+}
+
+/* SCRIPTURE */
+.scripture-box {
+  background:#fffaf0;
+  border:1px solid #feebc8;
+  border-radius:8px;
+  padding:20px;
+  margin:25px 0;
+}
+
+.scripture-box .ref {
+  font-weight:700;
+  color:var(--accent);
+  font-size:13px;
+  text-transform:uppercase;
+}
+
+.scripture-box blockquote {
+  margin:10px 0 0;
+  font-style:italic;
+}
+
+/* QUOTE */
+.quote {
+  background:#fffaf0;
+  border-left:5px solid var(--accent);
+  padding:20px;
+  margin:25px 0;
+  font-style:italic;
+}
+
+/* TAKEAWAYS */
+.takeaways {
+  background:#edf2f7;
+  padding:25px;
+  border-radius:10px;
+}
+
+.takeaways li {
+  margin-bottom:10px;
+}
+
+/* TAGS */
+.tag {
+  display:inline-block;
+  background:#e2e8f0;
+  padding:6px 12px;
+  margin:4px;
+  border-radius:20px;
+  font-size:13px;
+}
+
+/* BUTTON */
+.button {
+  display:inline-block;
+  margin-top:30px;
+  padding:14px 28px;
+  background:var(--accent);
+  color:white;
+  text-decoration:none;
+  border-radius:30px;
+}
+
+/* MOBILE */
+@media (max-width:600px) {
+
+  body {
+    font-size:18px;
+  }
+
+  .container {
+    padding:20px 15px;
+  }
+
+  .hero {
+    padding:35px 20px;
+  }
+
+  .hero h1 {
+    font-size:26px;
+  }
+
+  .intro {
+    font-size:18px;
+  }
+
+  .section-card {
+    padding:20px;
+  }
+
+}

@@ -381,418 +381,71 @@ Transcript summary:
 # -----------------------------
 # Generate Professional HTML
 # -----------------------------
+def generate_html(meta, article):
 
-def generate_html(meta, article_data):
-
-    date = format_date(meta["date"])
-
-    # -----------------------------
-    # Scripture Cards
-    # -----------------------------
-    verse_html = ""
-
-    if "verses" in article_data:
-        for v in article_data["verses"]:
-            verse_html += f"""
-            <div class="scripture-card">
-                <div class="scripture-ref">{v['reference']}</div>
-                <div class="scripture-text">"{v['text']}"</div>
-            </div>
-            """
-
-    verse_section = ""
-    if verse_html:
-        verse_section = f"""
-        <div class="verse-section">
-            <h3 class="verse-title">Scripture Highlights</h3>
-            {verse_html}
-        </div>
-        """
-
-    # -----------------------------
-    # Sections
-    # -----------------------------
-    sections_html = ""
-
-    for s in article_data["sections"]:
-        sections_html += f"""
-        <section class="section">
-            <h2>{s['heading']}</h2>
-            <p>{s['content'].replace("\\n","<br><br>")}</p>
-        </section>
-        """
-
-    # -----------------------------
-    # Quotes
-    # -----------------------------
-    quotes_html = ""
-
-    if "quotes" in article_data:
-        for q in article_data["quotes"]:
-            quotes_html += f"""
-            <blockquote class="quote">
-                {q}
-            </blockquote>
-            """
-
-    # -----------------------------
-    # Takeaways
-    # -----------------------------
-    takeaways_html = ""
-
-    if "takeaways" in article_data:
-        for t in article_data["takeaways"]:
-            takeaways_html += f"<li>{t}</li>"
-
-    # -----------------------------
-    # Keywords
-    # -----------------------------
-    keywords_html = ""
-
-    if "keywords" in article_data:
-        keywords_html = "".join(
-            [f'<span class="tag">{k}</span>' for k in article_data["keywords"]]
-        )
-
-    # -----------------------------
-    # HTML
-    # -----------------------------
-    html = f"""
+    return f"""
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>{meta['title']}</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-<style>
-
-/* -------- Base -------- */
-
-body {{
-    margin:0;
-    background:#f7f9fc;
-    font-family: Inter, system-ui, sans-serif;
-    color:#2d3748;
-}}
-
-/* -------- Container -------- */
-
-.container {{
-    max-width:680px;
-    margin:60px auto;
-    padding:0 20px;
-}}
-
-/* -------- Header -------- */
-
-.header {{
-    text-align:center;
-    margin-bottom:50px;
-}}
-
-.header h1 {{
-    font-size:34px;
-    line-height:1.3;
-    margin-bottom:20px;
-}}
-
-.meta {{
-    font-size:14px;
-    color:#718096;
-    line-height:1.8;
-}}
-
-/* -------- Intro -------- */
-
-.intro {{
-    font-size:20px;
-    line-height:1.9;
-    margin-bottom:40px;
-    color:#4a5568;
-}}
-
-/* -------- Divider -------- */
-
-.divider {{
-    height:1px;
-    background:#e2e8f0;
-    margin:50px 0;
-}}
-
-/* -------- Scripture -------- */
-
-.verse-title {{
-    font-size:18px;
-    margin-bottom:10px;
-    color:#2b6cb0;
-}}
-
-.scripture-card {{
-    background:#f9fafb;
-    border-left:3px solid #c05621;
-    padding:20px 22px;
-    margin:20px 0;
-    border-radius:8px;
-}}
-
-.scripture-ref {{
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:0.5px;
-    color:#c05621;
-    margin-bottom:10px;
-    text-transform:uppercase;
-}}
-
-.scripture-text {{
-    font-size:18px;
-    line-height:1.9;
-    font-style:italic;
-}}
-
-/* -------- Sections -------- */
-
-.section {{
-    margin-bottom:45px;
-}}
-
-.section h2 {{
-    font-size:22px;
-    margin-bottom:15px;
-    color:#2b6cb0;
-}}
-
-.section p {{
-    font-size:18px;
-    line-height:2;
-}}
-
-/* -------- Quotes -------- */
-
-.quote {{
-    border-left:4px solid #ed8936;
-    padding-left:20px;
-    margin:40px 0;
-    font-style:italic;
-    color:#4a5568;
-    font-size:18px;
-    line-height:2;
-}}
-
-/* -------- Takeaways -------- */
-
-.takeaways {{
-    margin-top:50px;
-}}
-
-.takeaways h3 {{
-    font-size:20px;
-    margin-bottom:20px;
-}}
-
-.takeaways ul {{
-    padding-left:20px;
-}}
-
-.takeaways li {{
-    margin-bottom:14px;
-    line-height:1.8;
-    font-size:17px;
-}}
-
-/* -------- Tags -------- */
-
-.tags {{
-    margin-top:50px;
-}}
-
-.tag {{
-    display:inline-block;
-    background:#edf2f7;
-    padding:6px 12px;
-    margin:5px;
-    border-radius:16px;
-    font-size:13px;
-}}
-
-/* -------- Button -------- */
-
-.button {{
-    display:block;
-    text-align:center;
-    margin:50px auto;
-    padding:14px 28px;
-    background:#ed8936;
-    color:white;
-    text-decoration:none;
-    border-radius:25px;
-    width:220px;
-    font-weight:600;
-}}
-
-/* -------- Footer -------- */
-
-.footer {{
-    text-align:center;
-    font-size:13px;
-    color:#a0aec0;
-    margin-top:60px;
-}}
-
-@media screen and (max-width: 600px) {
-
-  body {
-    font-size: 18px;   /* base font bigger */
-  }
-
-  .container {
-    padding: 20px 15px;
-  }
-
-  h1 {
-    font-size: 26px;
-  }
-
-  h2 {
-    font-size: 22px;
-  }
-
-  h3 {
-    font-size: 20px;
-  }
-
-  .intro {
-    font-size: 19px;
-    line-height: 1.8;
-  }
-
-  .section-card p {
-    font-size: 18px;
-    line-height: 1.9;
-  }
-
-  .quote {
-    font-size: 18px;
-    line-height: 1.9;
-    padding: 20px;
-  }
-
-  .takeaways li {
-    font-size: 18px;
-    line-height: 1.8;
-  }
-
-  .meta {
-    font-size: 14px;
-  }
-
-  .search {
-    font-size: 16px;
-    padding: 14px;
-  }
-
-  /* NAV menu spacing */
-  .menu {
-    gap: 12px;
-  }
-
-  .menu-item {
-    font-size: 16px;
-  }
-
-}
-
-p {
-  line-height: 1.8;
-  margin-bottom: 18px;
-}
-
-body {
-  font-size: clamp(16px, 1.2vw, 18px);
-}
-
-.nav-top {
-  margin-bottom: 20px;
-}
-
-.back-home {
-  display:inline-block;
-  text-decoration:none;
-  font-size:14px;
-  color:#2b6cb0;
-  background:#edf2f7;
-  padding:8px 14px;
-  border-radius:20px;
-  transition:all 0.2s ease;
-}
-
-.back-home:hover {
-  background:#e2e8f0;
-}
-
-</style>
+<link rel="stylesheet" href="../assets/styles.css">
 
 </head>
 
 <body>
-back_button = """
-<div class="nav-top">
-  <a href="/" class="back-home">← Back to Home</a>
-</div>
-"""
 
 <div class="container">
-{back_button}
 
-<div class="header">
-    <h1>{meta['title']}</h1>
+<div class="nav-top">
+<a href="/" class="back-home">Back to Home</a>
+</div>
 
-    <div class="meta">
-        {meta['channel']} &bull;{date}<br>
-    </div>
+<div class="hero">
+<h1>{meta['title']}</h1>
+
+<div class="meta">
+Channel: {meta['channel']}<br>
+Published: {meta['date']}
+</div>
 </div>
 
 <div class="intro">
-{article_data["intro"]}
+{article['intro']}
 </div>
 
-{verse_section}
+{"".join([f'''
+<div class="section-card">
+<h2>{s["heading"]}</h2>
+<p>{s["content"]}</p>
+</div>
+''' for s in article["sections"]])}
 
-<div class="divider"></div>
+{"".join([f'''
+<div class="scripture-box">
+<div class="ref">{v["reference"]}</div>
+<blockquote>{v["text"]}</blockquote>
+</div>
+''' for v in article.get("verses", [])])}
 
-{sections_html}
-
-{quotes_html}
-
-<div class="divider"></div>
+{"".join([f'<div class="quote">{q}</div>' for q in article["quotes"]])}
 
 <div class="takeaways">
-    <h3>Key Takeaways</h3>
-    <ul>
-        {takeaways_html}
-    </ul>
+<h2>Key Takeaways</h2>
+<ul>
+{"".join([f"<li>{t}</li>" for t in article["takeaways"]])}
+</ul>
 </div>
 
-<div class="tags">
-    {keywords_html}
+<div>
+{"".join([f'<span class="tag">{k}</span>' for k in article["keywords"]])}
 </div>
 
 <a class="button" href="{meta['url']}">Watch Full Video</a>
-
-bottom_nav = """
-<div style="text-align:center; margin-top:50px;">
-  <a href="/" class="back-home">← Back to Home</a>
-</div>
-"""
-
-<div class="footer">
-    Generated from a YouTube talk • Designed for calm reading
-</div>
 
 </div>
 
@@ -800,7 +453,7 @@ bottom_nav = """
 </html>
 """
 
-    return html
+
 # -----------------------------
 # Main Program
 # -----------------------------
