@@ -319,10 +319,9 @@ You are an expert editor converting a YouTube talk into a clear, engaging articl
 Remix this transcript into a magazine-style article.
 
 STRICT RULES:
-- Return ONLY valid JSON
+- Return ONLY valid JSON. Auto Correct if you produce invalid JSON.
 - Do NOT include markdown or explanations
 - Keep content concise and readable and engaging
-- Limit each section to 1–2 short paragraphs
 - Do NOT include any explanation or text before or after JSON
 - Ensure JSON is complete and properly closed
 
