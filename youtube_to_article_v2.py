@@ -330,6 +330,9 @@ STYLE:
 - Clear and accessible to a general audience
 - Explain jargon simply
 - Preserve key insights and memorable ideas
+- Limit number of quotes to the 5 most impactful ones
+- Use 3-5 keywords that capture the essence of the talk
+- Each section should have a clear heading and concise content
 
 FORMAT:
 
